@@ -1,0 +1,125 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stack>
+#include <sstream>
+using namespace std;
+
+// 함수 헤더
+void chTostr(wchar_t);
+void classifySrc(string);
+int priority(char);
+void calStack();
+void cal();
+
+// operation 구조체
+typedef struct operation{
+  int prior;
+  string o;
+}oper;
+
+string baseStr; // 중위표현식
+vector<string> baseSrc;
+stack<int> number;
+stack<oper> op;
+
+// 입력받은 값 baseStr이라는 string값으로 변환
+extern "C" __declspec(dllexport)
+int calculator(wchar_t temp_wch[]){
+
+  char temp_ch[wcslen(temp_wch)];
+
+  for (int i = 0; i < wcslen(temp_wch); i++) {
+    temp_ch[i] = temp_wch[i];
+    baseStr+= temp_ch[i];
+  }
+
+  // 계산 실행
+  classifySrc(baseStr);
+  calStack();
+  return number.top();
+}
+
+//숫자, 연산자 분류 하기
+void classifySrc(string src){
+
+  string temp;
+  for (int i = 0; i < src.size(); i++) {
+    if(src[i] >= '0' && src[i] <= '9'){
+      temp += src[i];
+      if(i == src.size()-1) baseSrc.push_back(temp);
+    }
+    else{
+      // 수정한 부분
+      if(src[i-1] >= '0' && src[i-1] <= '9'){
+        baseSrc.push_back(temp);
+        temp = "";
+      }
+      string temp_op;
+      temp_op += src[i];
+      baseSrc.push_back(temp_op);
+    }
+  }
+}
+
+// 연산자의 우선순위 수치화
+int priority(string op){
+  if (op == "(") return 0;
+  if (op == "+" || op == "-") return 1;
+  if (op == "*" || op == "/") return 2;
+  else return 3;
+}
+
+// 피연산자 두개와 연산자 하나 계산 하는 함수
+void cal(){
+  int res; // 이 함수를 통해 계산을 끝냈을 때의 결과
+  int A = number.top();
+  number.pop();
+  int B = number.top();
+  number.pop();
+  string operand = op.top().o;
+  op.pop();
+
+  // 순서와 연산자에 따라 res에 계산해서 저장한다.
+  if(operand == "+") res = B + A;
+  else if(operand == "-") res = B - A;
+  else if(operand == "*") res = B * A;
+  else if(operand == "/") res = B / A;
+
+  // 최종 계산된 res를 number 스택에 push한다.
+  number.push(res);
+}
+
+// 스택에 연산자와 피연산자를 push하고 계산을 manage하는 함수
+void calStack(){
+
+  for (int i = 0; i < baseSrc.size(); i++) {
+    string idx = baseSrc[i]; // baseSrc의 원소를 하나씩 가져온다.
+
+    // 각 연산자 기호에 따라 기능을 달리해서 수행한다.
+    if(idx == "("){
+      op.push({0, idx});
+    }
+    else if(idx == ")"){
+      // "(" 만날때까지 계산 진행
+      while(op.top().o != "(")
+        cal();
+      op.pop();
+    }
+    else if(idx == "*" || idx == "/" || idx == "+" || idx == "-"){
+      // 사칙연산 기호일 때 현재 연산자의 우선순위가 더 높아질때까지 계산한다.
+      while(!op.empty() && op.top().prior >= priority(idx))
+        cal();
+      // 이제 연산자를 스택에 넣는다.
+      op.push({priority(idx), idx});
+    }
+    else{
+      // 숫자는 stoi로 integer로 바꾸어서 저장
+      number.push(stoi(idx));
+    }
+  }
+
+  // 최종적으로 남은 연산자를 계산해준다.
+  while(!op.empty())
+    cal();
+}
