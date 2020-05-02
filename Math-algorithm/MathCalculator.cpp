@@ -8,7 +8,9 @@ using namespace std;
 // 함수 헤더
 void chTostr(wchar_t);
 void classifySrc(string);
-int priority(char);
+int priority(char);s
+int calGCD(int, int);
+int calLCM(int, int);
 void calStack();
 void cal();
 
@@ -36,8 +38,19 @@ int calculator(wchar_t temp_wch[]){
 
   // 계산 실행
   classifySrc(baseStr);
-  calStack();
-  return number.top();
+  char chk = baseSrc[1][0]; // 어떤 연산을 할 지 정한다.
+
+  // 사용 규격을 정해준다.
+  if(chk == 'G' || chk == 'g'){
+    return calGCD(stoi(baseSrc[0]),stoi(baseSrc[2]));
+  }
+  else if(chk == 'L' || chk == 'l'){
+    return calLCM(stoi(baseSrc[0]),stoi(baseSrc[2]));
+  }
+  else{
+    calStack();
+    return number.top();
+  }
 }
 
 //숫자, 연산자 분류 하기
@@ -50,7 +63,6 @@ void classifySrc(string src){
       if(i == src.size()-1) baseSrc.push_back(temp);
     }
     else{
-      // 수정한 부분
       if(src[i-1] >= '0' && src[i-1] <= '9'){
         baseSrc.push_back(temp);
         temp = "";
@@ -122,4 +134,16 @@ void calStack(){
   // 최종적으로 남은 연산자를 계산해준다.
   while(!op.empty())
     cal();
+}
+
+// 최대공약수 구하기 - 유클리드 알고리즘
+int calGCD(int a, int b){
+  if(b == 0)  return a;
+  else  return calGCD(b, a%b);
+}
+
+// 최소공배수
+int calLCM (int a, int b){
+  int val = calGCD(a, b);
+  return val * (a/val) *(b/val);
 }
