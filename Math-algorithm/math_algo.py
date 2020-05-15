@@ -3,7 +3,7 @@ import ctypes
 
 MathCalculator = cdll.LoadLibrary('MathCalculator.dll')
 
-res = "3P3"
+res = "12r150"
 print(MathCalculator.calculator(res))
 
 

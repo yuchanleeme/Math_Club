@@ -3,6 +3,7 @@
 #include <vector>
 #include <stack>
 #include <sstream>
+#include <math.h>
 using namespace std;
 
 // 함수 헤더
@@ -16,6 +17,7 @@ void cal();
 void permutation(int, int, int);
 void combination(int, int, int, int);
 void print_matrix(int, int);
+int printPrimeNum(int,  int);
 
 // operation 구조체
 typedef struct operation{
@@ -67,6 +69,9 @@ int calculator(wchar_t temp_wch[]){
   else if(chk == 'M' || chk == 'm'){
     print_matrix(stoi(baseSrc[0]),stoi(baseSrc[2]));
     return stoi(baseSrc[0]);
+  }
+  else if(chk == 'R' || chk == 'r'){
+    return printPrimeNum(stoi(baseSrc[0]),stoi(baseSrc[2]));
   }
   else{
     calStack();
@@ -225,4 +230,31 @@ void print_matrix(int a, int b){
     printf("%4d x %4d = %4d\n", a, i, a*i);
   }
 
+}
+
+int printPrimeNum(int a, int b){
+
+  vector<int> res;
+  bool res_trigger;
+
+  for (size_t i = a; i <= b; i++) {
+    res_trigger = true;
+    for (int j = 2; j <= sqrt(i); j++) {
+      if(i % j == 0){
+        res_trigger = false;
+        break;
+      }
+    }
+
+    if((res_trigger || i == 2) && i != 1)
+      res.push_back(i);
+  }
+
+  for (int i = 1; i <= res.size(); i++) {
+    printf("%d ", res[i-1]);
+    if(i % 10 == 0) printf("\n");
+  }
+  printf("\n");
+
+  return res.size();
 }
