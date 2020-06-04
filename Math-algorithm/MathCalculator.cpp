@@ -18,6 +18,7 @@ void permutation(int, int, int);
 void combination(int, int, int, int);
 void print_matrix(int, int);
 int printPrimeNum(int,  int);
+void clear_args();
 
 // operation 구조체
 typedef struct operation{
@@ -38,6 +39,7 @@ int p_c_res = 0;
 extern "C" __declspec(dllexport)
 int calculator(wchar_t temp_wch[]){
 
+  int ans;
   char temp_ch[wcslen(temp_wch)];
 
   for (int i = 0; i < wcslen(temp_wch); i++) {
@@ -51,34 +53,59 @@ int calculator(wchar_t temp_wch[]){
 
   // 사용 규격을 정해준다.
   if(chk == 'G' || chk == 'g'){
-    return calGCD(stoi(baseSrc[0]),stoi(baseSrc[2]));
+    ans = calGCD(stoi(baseSrc[0]),stoi(baseSrc[2]));
+    clear_args();
+    return ans;
   }
   else if(chk == 'L' || chk == 'l'){
-    return calLCM(stoi(baseSrc[0]),stoi(baseSrc[2]));
+    ans = calLCM(stoi(baseSrc[0]),stoi(baseSrc[2]));
+    clear_args();
+    return ans;
   }
   else if(chk == 'P' || chk == 'p'){
     p_c_visit = vector<int>(stoi(baseSrc[0])+1, 0);
     permutation(0,stoi(baseSrc[0]),stoi(baseSrc[2]));
-    return p_c_res;
+    ans = p_c_res;
+    clear_args();
+    return ans;
   }
   else if(chk == 'C' || chk == 'c'){
     p_c_visit = vector<int>(stoi(baseSrc[0])+1, 0);
     combination(0,stoi(baseSrc[0]),stoi(baseSrc[2]),1);
-    return p_c_res;
+    ans = p_c_res;
+    clear_args();
+    return ans;
   }
   else if(chk == 'M' || chk == 'm'){
     print_matrix(stoi(baseSrc[0]),stoi(baseSrc[2]));
-    return stoi(baseSrc[0]);
+    ans = stoi(baseSrc[0]);
+    clear_args();
+    return ans;
   }
   else if(chk == 'R' || chk == 'r'){
-    return printPrimeNum(stoi(baseSrc[0]),stoi(baseSrc[2]));
+    ans = printPrimeNum(stoi(baseSrc[0]),stoi(baseSrc[2]));
+    clear_args();
+    return ans;
   }
   else{
     calStack();
-    return number.top();
+    ans = number.top();
+    clear_args();
+    return ans;
   }
   return 0;
 
+}
+
+void clear_args(){
+  baseStr = "";
+  baseSrc.clear();
+  while(!number.empty()) number.pop();
+  while(!op.empty()) op.pop();
+
+  p_c.clear();
+  p_c_visit.clear();
+  p_c_res = 0;
 }
 
 //숫자, 연산자 분류 하기
