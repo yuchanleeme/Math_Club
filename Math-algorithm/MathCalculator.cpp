@@ -133,7 +133,7 @@ void classifySrc(string src){
 int priority(string op){
   if (op == "(") return 0;
   if (op == "+" || op == "-") return 1;
-  if (op == "*" || op == "/") return 2;
+  if (op == "X" || op == "/") return 2;
   else return 3;
 }
 
@@ -150,7 +150,7 @@ void cal(){
   // 순서와 연산자에 따라 res에 계산해서 저장한다.
   if(operand == "+") res = B + A;
   else if(operand == "-") res = B - A;
-  else if(operand == "*") res = B * A;
+  else if(operand == "X") res = B * A;
   else if(operand == "/") res = B / A;
 
   // 최종 계산된 res를 number 스택에 push한다.
@@ -173,7 +173,7 @@ void calStack(){
         cal();
       op.pop();
     }
-    else if(idx == "*" || idx == "/" || idx == "+" || idx == "-"){
+    else if(idx == "X" || idx == "/" || idx == "+" || idx == "-"){
       // 사칙연산 기호일 때 현재 연산자의 우선순위가 더 높아질때까지 계산한다.
       while(!op.empty() && op.top().prior >= priority(idx))
         cal();
