@@ -16,7 +16,6 @@ void calStack();
 void cal();
 void permutation(int, int, int);
 void combination(int, int, int, int);
-void print_matrix(int, int);
 int printPrimeNum(int,  int);
 void clear_args();
 
@@ -77,9 +76,7 @@ int calculator(wchar_t temp_wch[]){
     return ans;
   }
   else if(chk == 'M' || chk == 'm'){
-    print_matrix(stoi(baseSrc[0]),stoi(baseSrc[2]));
     ans = stoi(baseSrc[0]);
-    clear_args();
     return ans;
   }
   else if(chk == 'R' || chk == 'r'){
@@ -231,10 +228,6 @@ void permutation (int level, int a, int b){
 void combination (int level, int a, int b, int min){
 
   if(level == b){
-    for (int l = 0; l < b; l++) {
-      printf("%d ", p_c[l]);
-    }
-    printf("\n");
     p_c_res += 1;
     return;
   }
@@ -249,14 +242,6 @@ void combination (int level, int a, int b, int min){
       }
     }
   }
-}
-
-void print_matrix(int a, int b){
-
-  for (int i = 1; i <= b; i++) {
-    printf("%4d x %4d = %4d\n", a, i, a*i);
-  }
-
 }
 
 int printPrimeNum(int a, int b){
@@ -276,12 +261,6 @@ int printPrimeNum(int a, int b){
     if((res_trigger || i == 2) && i != 1)
       res.push_back(i);
   }
-
-  for (int i = 1; i <= res.size(); i++) {
-    printf("%d ", res[i-1]);
-    if(i % 10 == 0) printf("\n");
-  }
-  printf("\n");
-
+  
   return res.size();
 }

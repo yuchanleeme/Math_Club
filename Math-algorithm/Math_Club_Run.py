@@ -82,16 +82,29 @@ class MyApp(QWidget):
         self.next = History_Window(self.hlabel)
 
     def run_algo(self):
+        check_M = False
         runObj = runningAlgo.runningAlgo(self.absPath)
+        # Matrix 확인
+        if 'm' or 'M' in runObj.ans:
+            check_M = True
         MathCalculator = cdll.LoadLibrary('MathCalculator.dll')
-        ans = str(MathCalculator.calculator(runObj.ans))
-        self.hlabel.append(runObj.ans + " = " + ans)
         font2 = self.font()
         font2.setPointSize(13)
         Qbox = QMessageBox(self)
         Qbox.setWindowTitle("Answer")
-        Qbox.setText("Answer : " + ans + "\n")
         Qbox.setFont(font2)
+        ans = MathCalculator.calculator(runObj.ans)
+
+        if check_M == True:
+            res = ""
+            for number in range(1,10):
+                res += str.format("%d X %d = %d\n" %(ans, number, ans*number))
+                Qbox.setText("MTRIX Number : " + str(ans) + "\n" + res)
+            self.hlabel.append("MATRIX Number : " + str(ans) + "\n" + res)
+        else:
+            self.hlabel.append(runObj.ans + " = " + str(ans))
+            Qbox.setText("Answer : " + ans + "\n")
+
         Qbox.move(1000, 600)
         Qbox.resize(600, 600)
         Qbox.show()
@@ -117,7 +130,8 @@ class Symbol_Window(QWidget):  # Symbols 버튼을 누르면 새로운 위젯이
                            " L : 최소공배수 구하기\n\t12 L 15 = 60\n\n"
                            " P : 순열 구하기\n\t5P3 = 60\n\n"
                            " C : 조합 구하기\n\t5C3 = 10\n\n"
-                           " R : 소수 (Prime Number) 구하기(범위)\n\t1R10 = 4 (2, 3, 5, 70\n\n")
+                           " R : 소수 (Prime Number) 구하기(범위)\n\t1R10 = 4 (2, 3, 5, 70)\n\n"
+                           " M : 매트릭스 출력 (1~9까지 곱한 값 결과 출력)\n\t7 M = 7 X 1 = 7, 7 X 2 = 14 . . .\n\n")
 
         scroll.setWidget(self.mesg)         # mesg를 담은 스크롤을 위젯으로 만든다
         self.vbox.addWidget(scroll)         # 박스에 위젯을 담는다
