@@ -12,6 +12,7 @@ import sys
 from ctypes import cdll
 import runningAlgo
 
+
 class MyApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -52,31 +53,31 @@ class MyApp(QWidget):
         label1.setFont(font)
         label1.move(500, 60)
 
-        btn1.clicked.connect(self.uploadImg)    # 버튼1, Upload 누를 때 uploadImg 실행
+        btn1.clicked.connect(self.uploadImg)  # 버튼1, Upload 누를 때 uploadImg 실행
         btn2.clicked.connect(self.run_algo)
-        btn3.clicked.connect(self.symbolView)   # 버튼3, Symbols 누를 때 실행
+        btn3.clicked.connect(self.symbolView)  # 버튼3, Symbols 누를 때 실행
         btn4.clicked.connect(self.historyView)  # 버튼4, History 누를 때 실행
 
         self.setWindowTitle('Math Club')  # 창의 제목 설정
-        self.move(600, 300)               # 실행창이 화면 어디에 뜰지
-        self.resize(800, 800)            # 창의 크기를 정해준다
-        self.show()                       # 위젯을 스크린에 보여준다
+        self.move(600, 300)  # 실행창이 화면 어디에 뜰지
+        self.resize(800, 800)  # 창의 크기를 정해준다
+        self.show()  # 위젯을 스크린에 보여준다
 
     def uploadImg(self):
-        self.absPath = ""                                     # 업로드할 이미지 절대경로 저장
-        self.fname = QFileDialog.getOpenFileName(self)        # 폴더 찾기 창을 띄워서 사용할 데이터를 open 하면 절대경로가 저장됨
-        self.absPath = self.fname[0]                          # 절대경로 세팅
+        self.absPath = ""  # 업로드할 이미지 절대경로 저장
+        self.fname = QFileDialog.getOpenFileName(self)  # 폴더 찾기 창을 띄워서 사용할 데이터를 open 하면 절대경로가 저장됨
+        self.absPath = self.fname[0]  # 절대경로 세팅
         print(self.absPath)
         self.pixmap = QPixmap()
-        self.pixmap.load(self.absPath)                        # 받아온 절대경로의 데이터를 로드
-        self.pixmap = self.pixmap.scaledToWidth(450)          # 사이즈 조정
+        self.pixmap.load(self.absPath)  # 받아온 절대경로의 데이터를 로드
+        self.pixmap = self.pixmap.scaledToWidth(450)  # 사이즈 조정
         self.Upload_img.setPixmap(self.pixmap)
         self.layout = QBoxLayout(QBoxLayout.TopToBottom)
         self.setLayout(self.layout)
         self.layout.addWidget(self.Upload_img, alignment=Qt.AlignRight)
 
     def symbolView(self):
-        self.next = Symbol_Window()    # 새로운 위젯을 띄우기 위해 Second 클래스 연결
+        self.next = Symbol_Window()  # 새로운 위젯을 띄우기 위해 Second 클래스 연결
 
     def historyView(self):
         self.next = History_Window(self.hlabel)
@@ -85,7 +86,7 @@ class MyApp(QWidget):
         check_M = False
         runObj = runningAlgo.runningAlgo(self.absPath)
         # Matrix 확인
-        if 'm' or 'M' in runObj.ans:
+        if 'M' in runObj.ans:
             check_M = True
         MathCalculator = cdll.LoadLibrary('MathCalculator.dll')
         font2 = self.font()
@@ -95,15 +96,15 @@ class MyApp(QWidget):
         Qbox.setFont(font2)
         ans = MathCalculator.calculator(runObj.ans)
 
-        if check_M == True:
+        if check_M:
             res = ""
-            for number in range(1,10):
-                res += str.format("%d X %d = %d\n" %(ans, number, ans*number))
+            for number in range(1, 10):
+                res += str.format("%d X %d = %d\n" % (ans, number, ans * number))
                 Qbox.setText("MTRIX Number : " + str(ans) + "\n" + res)
             self.hlabel.append("MATRIX Number : " + str(ans) + "\n" + res)
         else:
             self.hlabel.append(runObj.ans + " = " + str(ans))
-            Qbox.setText("Answer : " + ans + "\n")
+            Qbox.setText("Answer : " + str(ans) + "\n")
 
         Qbox.move(1000, 600)
         Qbox.resize(600, 600)
@@ -117,9 +118,9 @@ class Symbol_Window(QWidget):  # Symbols 버튼을 누르면 새로운 위젯이
         self.initWindow()
 
     def initWindow(self):
-        scroll = QScrollArea()      # 스크롤 생성
-        self.vbox = QVBoxLayout()   # label 담을 박스 생성
-        self.widget = QWidget()     # 위젯 생성
+        scroll = QScrollArea()  # 스크롤 생성
+        self.vbox = QVBoxLayout()  # label 담을 박스 생성
+        self.widget = QWidget()  # 위젯 생성
         self.mesg = QLabel("----------------사칙연산----------------\n\n"
                            " + : 덧셈\n\t1 + 2 = 3\n\n"
                            " - : 뺄셈\n\t10 - 3 = 7\n\n"
@@ -133,11 +134,11 @@ class Symbol_Window(QWidget):  # Symbols 버튼을 누르면 새로운 위젯이
                            " R : 소수 (Prime Number) 구하기(범위)\n\t1R10 = 4 (2, 3, 5, 70)\n\n"
                            " M : 매트릭스 출력 (1~9까지 곱한 값 결과 출력)\n\t7 M = 7 X 1 = 7, 7 X 2 = 14 . . .\n\n")
 
-        scroll.setWidget(self.mesg)         # mesg를 담은 스크롤을 위젯으로 만든다
-        self.vbox.addWidget(scroll)         # 박스에 위젯을 담는다
-        self.setLayout(self.vbox)           # 박스를 레이아웃에 추가
+        scroll.setWidget(self.mesg)  # mesg를 담은 스크롤을 위젯으로 만든다
+        self.vbox.addWidget(scroll)  # 박스에 위젯을 담는다
+        self.setLayout(self.vbox)  # 박스를 레이아웃에 추가
 
-        self.setWindowTitle(self.title)     # 창 제목 세팅
+        self.setWindowTitle(self.title)  # 창 제목 세팅
         self.setGeometry(500, 200, 600, 500)
         self.show()
 
@@ -150,13 +151,13 @@ class History_Window(QWidget):  # History 버튼을 누르면 새로운 위젯�
 
     def initWindow(self, hlabel):
         history_list = hlabel
-        list_view = QListView(self)     # 리스트뷰 생성
-        model = QStandardItemModel()    # 리스트 뷰에 들어갈 모델 생성
+        list_view = QListView(self)  # 리스트뷰 생성
+        model = QStandardItemModel()  # 리스트 뷰에 들어갈 모델 생성
 
         for h in history_list:
-            model.appendRow(QStandardItem(h))   # 모델에 한 줄 씩 추가
+            model.appendRow(QStandardItem(h))  # 모델에 한 줄 씩 추가
 
-        list_view.setModel(model)       # 리스트 뷰에 모델 얹기
+        list_view.setModel(model)  # 리스트 뷰에 모델 얹기
         list_view.resize(500, 500)
 
         self.setWindowTitle(self.title)  # 창 제목 세팅
@@ -165,6 +166,6 @@ class History_Window(QWidget):  # History 버튼을 누르면 새로운 위젯�
 
 
 if __name__ == '__main__':
-   app = QApplication(sys.argv)
-   ex = MyApp()
-   sys.exit(app.exec_())
+    app = QApplication(sys.argv)
+    ex = MyApp()
+    sys.exit(app.exec_())
