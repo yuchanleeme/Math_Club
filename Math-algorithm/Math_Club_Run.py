@@ -67,7 +67,6 @@ class MyApp(QWidget):
         self.absPath = ""  # 업로드할 이미지 절대경로 저장
         self.fname = QFileDialog.getOpenFileName(self)  # 폴더 찾기 창을 띄워서 사용할 데이터를 open 하면 절대경로가 저장됨
         self.absPath = self.fname[0]  # 절대경로 세팅
-        print(self.absPath)
         self.pixmap = QPixmap()
         self.pixmap.load(self.absPath)  # 받아온 절대경로의 데이터를 로드
         self.pixmap = self.pixmap.scaledToWidth(450)  # 사이즈 조정
