@@ -18,21 +18,9 @@
 
 - __필요 파이썬 라이브러리__
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   * __Fastai (1.0.61)__
 
   * __PyQt5 (5.13.0)__
-=======
-  * __Fastai__
-
-  * __PyQt5__
->>>>>>> eae08b54b57f315fef2ad8e4619f8f38755bdfcf
-=======
-  * __Fastai__
-
-  * __PyQt5__
->>>>>>> eae08b54b57f315fef2ad8e4619f8f38755bdfcf
 
   * __Ctypes__
 
